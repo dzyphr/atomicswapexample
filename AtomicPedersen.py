@@ -1,3 +1,5 @@
+import random
+from random import *
 import secrets
 import hashlib
 from ECC import *
@@ -5,10 +7,6 @@ from ECC import *
 sha256 = hashlib.sha256()
 message = "1000000000" #some public change output value in mimblewimble
 print("\nmessage:", message)
-p1SecretKey, p1PublicKey = gen_keypair()
-print("\np1 pubkey:", p1PublicKey)
-p2SecretKey, p2PublicKey = gen_keypair()
-print("\np2 pubkey:", p2PublicKey)
 #start p1 activity
 rs = random.randrange(0, curve.n)#BOTH rs AND ks SHOULD NOT BE REUSED BY ONE SIGNER
 ks = random.randrange(0, curve.n)
@@ -34,7 +32,8 @@ e = int(sha256.digest().hex(), 16)
 print("e:", e)
 sr = kr + (e * rr)
 print("\np2 creates their multisig value sr:", sr)
-x = secrets.randbits(256)
+#x = secrets.randbits(256)
+x = int.from_bytes(SystemRandom().getrandbits(128).to_bytes(16, 'little'), byteorder='little')
 print("\np2 creates a 256bit secret preimage x:", x)
 srG = scalar_mult(sr, curve.g)
 xG = scalar_mult(x, curve.g)
